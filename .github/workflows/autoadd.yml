@@ -42,11 +42,11 @@ jobs:
           wget https://raw.githubusercontent.com/bebasid/bebasid/master/dev/scripts/scan.py
           echo "INSTALLATION DONE - ALL SET"
           echo "The domain $domain is set"
-          python Sublist3r/sublist3r.py -d $domain
-          nmap --script dns-brute $domain
-          findomain -t $domain
-          anubis -t $domain
-          python dnscan/dnscan.py -d $domain
+          python Sublist3r/sublist3r.py -d $domain > domain1
+          nmap --script dns-brute $domain > domain2
+          findomain -t $domain > domain3
+          anubis -t $domain > domain4
+          python dnscan/dnscan.py -d $domain > domain5
           python FinalRecon/finalrecon.py --sub "https://$domain"
           content="domain1 domain2 domain3 domain1 domain4 domain5"
           clean_content=$(echo "$content" | tr -s ' ' '\n' | sort -u)
