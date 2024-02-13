@@ -49,7 +49,7 @@ jobs:
           python dnscan/dnscan.py -d $domain -o domain4
           python FinalRecon/finalrecon.py --sub "https://$domain" -o domain5
           content="domain1 domain2 domain3 domain1 domain4 domain5"
-          clean_content=$(cat "$content" | tr -s ' ' '\n' | sort -u)
+          clean_content=$(cat $content | tr -s ' ' '\n' | sort -u)
           echo "$clean_content" > domains-unsorted.txt
           sort -u domains-unsorted.txt > domains-sorted.txt
           python scan.py domains-sorted.txt
