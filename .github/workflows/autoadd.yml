@@ -1,0 +1,69 @@
+name: autoadd
+on:
+  issues:
+    types:
+      - labeled
+jobs:
+  add-comment:
+    if: github.event.label.name == 'ok'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Extract domain from issue body
+        id: extract-domain
+        run: |
+          domain=$(jq -r '.issue.body' $GITHUB_EVENT_PATH)
+          echo "::set-output name=domain::$domain"
+
+      - name: Execute Bash script
+        run: |
+          domain="${{ steps.extract-domain.outputs.domain }}"
+          # Script content starts here
+          sudo apt install nmap
+          sudo apt install git
+          sudo apt install unzip
+          sudo pip install anubis-netsec
+          git clone https://github.com/aboul3la/Sublist3r.git
+          git clone https://github.com/rbsec/dnscan.git
+          git clone https://github.com/thewhiteh4t/FinalRecon.git
+          sudo pip install -r Sublist3r/requirements.txt
+          sudo pip install -r dnscan/requirements.txt
+          sudo pip install -r FinalRecon/requirements.txt
+          curl -LO https://github.com/findomain/findomain/releases/latest/download/findomain-linux.zip
+          unzip findomain-linux.zip
+          chmod +x findomain
+          sudo mv findomain /usr/bin/findomain
+          findomain --help
+          wget https://raw.githubusercontent.com/bebasid/bebasid/master/dev/scripts/scan.py
+          echo "INSTALLATION DONE - ALL SET"
+          echo "The domain $domain is set"
+          python Sublist3r/sublist3r.py -d $domain
+          nmap --script dns-brute $domain
+          findomain -t $domain
+          anubis -t $domain
+          python dnscan/dnscan.py -d $domain
+          python FinalRecon/finalrecon.py --sub "https://$domain"
+          content="domain1 domain2 domain3 domain1 domain4 domain5"
+          clean_content=$(echo "$content" | tr -s ' ' '\n' | sort -u)
+          echo "$clean_content" > domains-unsorted.txt
+          sort -u domains-unsorted.txt > domains-sorted.txt
+          python scan.py domains-sorted.txt
+          echo
+          echo "Result Lists:"
+          cat hosts-domains-sorted.txt
+          # Script content ends here
+
+      - name: Close Issue
+        uses: peter-evans/close-issue@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          comment: uhuh
+
+      - name: Clean up
+        run: |
+          find . -maxdepth 1 -type f ! -name 'hosts-domains-sorted.txt' -delete
+          find . -maxdepth 1 -type d ! -name '.github' -delete
