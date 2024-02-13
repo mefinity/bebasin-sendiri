@@ -63,7 +63,13 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           comment: uhuh
 
-      - name: Clean up
-        run: |
-          find . -maxdepth 1 -type f ! -name 'hosts-domains-sorted.txt' -delete
-          find . -maxdepth 1 -type d ! -name '.github' -delete
+- name: Clean up
+  run: |
+    rm -rf Sublist3r/ dnscan/ FinalRecon/
+    find . -maxdepth 1 -type f ! -name 'hosts-domains-sorted.txt' -delete
+    find . -maxdepth 1 -type d ! -name '.github' ! -name '.' -exec rm -rf {} +
+- name: Commit and push changes
+  run: |
+    git add hosts-domains-sorted.txt
+    git commit -m "Update hosts-domains-sorted.txt"
+    git push origin ${{ github.ref }}
