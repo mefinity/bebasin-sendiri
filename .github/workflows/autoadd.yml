@@ -42,12 +42,12 @@ jobs:
           wget https://raw.githubusercontent.com/bebasid/bebasid/master/dev/scripts/scan.py
           echo "INSTALLATION DONE - ALL SET"
           echo "The domain $domain is set"
-          python Sublist3r/sublist3r.py -d $domain > domain1
-          nmap --script dns-brute $domain > domain2
-          findomain -t $domain > domain3
-          anubis -t $domain > domain4
-          python dnscan/dnscan.py -d $domain > domain5
-          python FinalRecon/finalrecon.py --sub "https://$domain"
+          python Sublist3r/sublist3r.py -d $domain -o domain1
+          nmap --script dns-brute $domain -oN domain2
+          findomain -t $domain 
+          anubis -t $domain -o domain3
+          python dnscan/dnscan.py -d $domain -o domain4
+          python FinalRecon/finalrecon.py --sub "https://$domain" -o domain5
           content="domain1 domain2 domain3 domain1 domain4 domain5"
           clean_content=$(echo "$content" | tr -s ' ' '\n' | sort -u)
           echo "$clean_content" > domains-unsorted.txt
@@ -62,6 +62,12 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           comment: uhuh
+
+      - name: Clean up
+        run: |
+          rm -rf Sublist3r/ dnscan/ FinalRecon/
+          find . -maxdepth 1 -type f ! -name 'hosts-domains-sorted.txt' -delete
+          find . -maxdepth 1 -type d ! -name '.github' ! -name '.' -exec rm -rf {} +
 
       - name: Commit and push changes
         run: |
