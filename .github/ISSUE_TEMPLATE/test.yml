@@ -7,7 +7,7 @@ body:
     attributes:
       label: Domain
       description: Masukkan domain
-      placeholder: www.example.com
+      placeholder: example.com
     validations:
       required: true
   - type: textarea
