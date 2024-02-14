@@ -8,6 +8,8 @@ on:
 jobs:
   scan_domains:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -47,7 +49,7 @@ jobs:
         run: anubis -t $domain -o domain3d && tail -n +22 domain3d > domain3 && rm domain3d
 
       - name: Subdomain Finder 4 | FinalRecon
-        run: python FinalRecon/finalrecon.py --sub https://$domain > domain4d && tail -n +40 domain4d > domain4 && rm domain4d
+        run: python FinalRecon/finalrecon.py --sub https://$domain > domain4dd && tail -n +42 domain4dd > domain4d && head -n -8 domain4d > domain4d && rm domain4d domain4dd
 
       - name: Add domain lists to file
         run: |
