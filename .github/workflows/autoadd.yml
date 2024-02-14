@@ -41,7 +41,7 @@ jobs:
         run: python Sublist3r/sublist3r.py -d $domain -o domain1
 
       - name: Subdomain Finder 2 | Findomain
-        run: findomain -t $domain -o domain2
+        run: findomain -u domain2 -t $domain
 
       - name: Subdomain Finder 3 | Anubis
         run: anubis -t $domain -o domain3d && tail -n +22 domain3d > domain3 && rm domain3d
