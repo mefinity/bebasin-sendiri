@@ -34,6 +34,9 @@ jobs:
       - name: Set domain variable
         run: echo "domain=$(cat choppingblock.txt)" >> $GITHUB_ENV
 
+      - name: Grant execute permission
+        run: chmod +x /usr/local/bin/findomain && chmod +x /usr/local/bin/anubis
+
       - name: Subdomain Finder 1 | Sublist3r
         run: python Sublist3r/sublist3r.py -d $domain -o domain1
 
