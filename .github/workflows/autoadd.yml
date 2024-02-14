@@ -57,16 +57,16 @@ jobs:
       - name: Run Scan
         run: |
           python scan.py domains-sortedd.txt
-          tail -n +3 hosts-domains-sorted.txt > hosts-domains-sortedd.txt
+          tail -n +3 hosts-domains-sortedd.txt > hosts-domains-sorted.txt
           echo
           echo "Result Lists:"
-          cat hosts-domains-sortedd.txt
+          cat hosts-domains-sorted.txt
 
       - name: Commit and push changes
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           git remote set-url origin "https://${{ secrets.GH_TOKEN }}@github.com/mefinity/bebasin-sendiri.git"
-          git add hosts-domains-sortedd.txt
+          git add hosts-domains-sorted.txt
           git commit -m "Auto Bebasin"
           git push origin main
