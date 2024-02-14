@@ -1,0 +1,81 @@
+name: autoadd
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * 0"
+
+jobs:
+  scan_domains:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          git clone https://github.com/aboul3la/Sublist3r.git
+          git clone https://github.com/thewhiteh4t/FinalRecon.git
+          sudo pip install -r Sublist3r/requirements.txt
+          sudo pip install -r FinalRecon/requirements.txt
+          sudo pip install anubis-netsec
+          pip3 install --upgrade requests
+          curl -LO https://github.com/findomain/findomain/releases/latest/download/findomain-linux.zip
+          unzip findomain-linux.zip
+          chmod +x findomain
+          sudo mv findomain /usr/bin/findomain
+          wget https://raw.githubusercontent.com/bebasid/bebasid/master/dev/scripts/scan.py
+          echo "INSTALLATION DONE - ALL SET"
+
+      - name: Set domain variable
+        run: echo "domain = \"$(cat choppingblock.txt)\""
+
+      - name: Subdomain Finder 1 | Sublist3r
+        run: python Sublist3r/sublist3r.py -d ${{ env.domain }} -o domain1
+
+      - name: Subdomain Finder 2 | Findomain
+        run: findomain -t ${{ env.domain }} -o domain2
+
+      - name: Subdomain Finder 3 | Anubis
+        run: anubis -t ${{ env.domain }} -o domain3d
+        tail -n +22 domain3d > domain3
+        rm domain3d
+
+      - name: Subdomain Finder 4 | FinalRecon
+        run: | 
+          python FinalRecon/finalrecon.py --sub https://${{ env.domain }} > domain4d
+          tail -n +40 domain4d > domain4
+          rm domain4d
+
+      - name: Add domain lists to file
+        run: |
+          content="domain1 domain2 domain3 domain1 domain4"
+          clean_content=$(echo $content | tr " " "\n" | sort | uniq)
+          echo "$clean_content" > domains-unsorted.txt
+          cat domains-unsorted.txt
+
+      - name: Sort and remove duplicate from list
+        run: |
+          sort domains-unsorted.txt | uniq > domains-sorted.txt
+          cat domains-sorted.txt
+
+      - name: Run Scan
+        run: |
+          python scan.py domains-sorted.txt
+          echo
+          echo "Result Lists:"
+          cat hosts-domains-sorted.txt
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git remote set-url origin "https://${{ secrets.GH_TOKEN }}@github.com/mefinity/bebasin-sendiri.git"
+          git add hosts-domains-sorted.txt
+          git commit -m "Auto Bebasin"
+          git push origin main
