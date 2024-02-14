@@ -39,9 +39,6 @@ jobs:
       - name: Grant execute permission
         run: chmod +x /usr/local/bin/findomain
 
-      - name: Subdomain Finder 1 | Sublist3r
-        run: python Sublist3r/sublist3r.py -d $domain -o domain1
-
       - name: Subdomain Finder 2 | Findomain
         run: findomain -u domain2 -t $domain
 
@@ -53,7 +50,7 @@ jobs:
 
       - name: Add domain lists to file
         run: |
-          cat domain1 domain2 domain3 domain4 >> domains-unsorted.txt
+          cat domain2 domain3 domain4 >> domains-unsorted.txt
           sort -u domains-unsorted.txt > domains-sortedd.txt
           cat domains-sortedd.txt
 
