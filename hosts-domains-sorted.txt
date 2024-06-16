@@ -5,7 +5,7 @@
 103.87.68.196 antivirus.bebasid.com
 
 # [bebasid.com]
-172.64.80.1 www.bebasid.com
+172.67.193.192 www.bebasid.com
 154.29.78.35 webmail.bebasid.com
 172.67.193.192 uptime.bebasid.com
 10.9.254.1 proxmox.bebasid.com
