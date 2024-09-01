@@ -12,7 +12,7 @@
 10.9.254.1 proxmox.bebasid.com
 103.87.68.194 primary-cname.bebasid.com
 154.29.78.35 mail.bebasid.com
-172.67.193.192 ipochan.bebasid.com
+172.64.80.1 ipochan.bebasid.com
 103.87.68.196 internetsehat.bebasid.com
 103.87.68.196 family-adblock.bebasid.com
 103.87.68.194 dns.bebasid.com
