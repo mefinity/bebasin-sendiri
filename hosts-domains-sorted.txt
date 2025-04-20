@@ -19,5 +19,5 @@
 103.87.68.196 internetsehat.bebasid.com
 103.87.68.196 family-adblock.bebasid.com
 103.87.68.194 dns.bebasid.com
-172.64.80.1 cdn.bebasid.com
+104.21.46.131 cdn.bebasid.com
 104.21.46.131 bebasid.com
